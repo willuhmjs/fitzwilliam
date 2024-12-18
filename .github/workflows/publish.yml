@@ -1,0 +1,44 @@
+name: Publish Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Register the slash commands
+        run: npm run register
+        env:
+            TOKEN: ${{ secrets.TOKEN }}
+            CLIENT_ID: ${{ secrets.CLIENT_ID }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}/fitzwilliam:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}/fitzwilliam:latest
