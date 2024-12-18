@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "node-fetch": "^3.3.2",
+    "rimraf": "^6.0.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "scripts": {
+    "build": "rimraf build/ && tsc",
+    "start": "node build/index.js",
+    "register": "node build/registerSlashCommands.js",
+    "dev": "npm run build && node build/index.js"
+  }
+}
