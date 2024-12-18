@@ -4,7 +4,9 @@ import { join } from 'path';
 import dotenv from 'dotenv';
 import { Command } from './types';
 
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
