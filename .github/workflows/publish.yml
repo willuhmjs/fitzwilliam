@@ -1,4 +1,4 @@
-name: Publish Docker Image
+name: Register Commands and Publish Docker Image
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-push:
+  register-commands:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,8 +27,19 @@ jobs:
       - name: Register the slash commands
         run: npm run register
         env:
-            TOKEN: ${{ secrets.TOKEN }}
-            CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          TOKEN: ${{ secrets.TOKEN }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+
+  push-to-ghcr:
+    runs-on: ubuntu-latest
+    needs: register-commands
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
