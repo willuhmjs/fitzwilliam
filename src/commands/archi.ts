@@ -1,5 +1,4 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import fetch from 'node-fetch';
 
 export const command = {
     data: new SlashCommandBuilder().setName("archi").setDescription("Ask Archibald AI a question").addStringOption(option => option.setName('question').setDescription('The question you want to ask Archibald').setRequired(true)),
@@ -7,6 +6,8 @@ export const command = {
         console.log(Date.now());
         const question = interaction.options.getString('question');
         await interaction.deferReply();
+        const fetch = (await import('node-fetch')).default;
+
         const response = await fetch('https://archibald.cs.odu.edu/api/generate', {
             method: 'POST',
             headers: {
